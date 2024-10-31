@@ -44,12 +44,12 @@ jobs:
         run: python -c "import sys; print(sys.version)"
 
       - name: Set Env Vars
-        working-directory: ./apiserver/ix/config
+        working-directory: ./app/config
         run: |
           echo "${{ steps.secrets.outputs.common_env }}" | base64 -d > common.env
 
       - name: Install dependencies
-        working-directory: ./apiserver
+        working-directory: ./
         run: pip install -r requirements.txt
 
       - name: Deploy App Engine
@@ -57,6 +57,6 @@ jobs:
         with:
           version: ${{ inputs.versionName }}
           promote: false
-          working_directory: ./apiserver
+          working_directory: ./
           deliverables: app.yaml
           project_id: ${{ steps.secrets.outputs.gcp_project_id }}
