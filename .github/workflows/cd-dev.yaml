@@ -30,8 +30,8 @@ jobs:
         uses: "google-github-actions/get-secretmanager-secrets@v1"
         with:
           secrets: |-
-            gcp_project_id:apolo11-dev/GCP_PROJECT_ID
-            common_env:apolo11-dev/COMMON_ENV_FILE
+            gcp_project_id:insurance-portal-dev/GCP_PROJECT_ID
+            common_env:insurance-portal-dev/COMMON_ENV_FILE
 
       - name: Set up Python 3.x
         uses: actions/setup-python@v4
