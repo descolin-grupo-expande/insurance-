@@ -1,0 +1,130 @@
+name: CD
+
+on:
+  workflow_dispatch:
+    inputs:
+      versionName:
+        description: "Specify version name"
+        required: true
+        type: string
+jobs:
+  build:
+    name: Build Web Client
+    permissions:
+      contents: "read"
+      id-token: "write"    
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - id: "auth"
+        name: "Authenticate to Google Cloud"
+        uses: "google-github-actions/auth@v1"
+        with:
+          workload_identity_provider: ${{ secrets.DEV_GOOGLE_AUTH_WIP }}
+          service_account: ${{ secrets.DEV_GOOGLE_AUTH_SA }}        
+
+      - id: "secrets"
+        name: "Get Secret Manager Secrets"
+        uses: "google-github-actions/get-secretmanager-secrets@v1"
+        with:
+          secrets: |-
+            frontend_secret_env:apolo11-dev/DEV_ENV_FRONTEND  
+            
+      - name: Set Frontend Env Vars
+        working-directory: ./admin/src/environments
+        run: |
+          echo "${{ steps.secrets.outputs.frontend_secret_env }}" | base64 -d > environment.ts
+
+      - name: Use Node 16.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: "16.x"
+          cache: "npm"
+          cache-dependency-path: ./admin/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+        working-directory: ./admin
+
+      - name: Build
+        run: node --max_old_space_size=12288 ./node_modules/.bin/ng build --configuration=development --aot --deploy-url static/
+        working-directory: ./admin
+
+      - name: Archive build
+        if: success()
+        uses: actions/upload-artifact@v3
+        with:
+          name: deploy_dist
+          path: admin/dist/admin
+          retention-days: 1
+  deploy:
+    name: Deploy App
+    permissions:
+      contents: "read"
+      id-token: "write"
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - id: "auth"
+        name: "Authenticate to Google Cloud"
+        uses: "google-github-actions/auth@v1"
+        with:
+          workload_identity_provider: ${{ secrets.DEV_GOOGLE_AUTH_WIP }}
+          service_account: ${{ secrets.DEV_GOOGLE_AUTH_SA }}
+
+      - id: "secrets"
+        name: "Get Secret Manager Secrets"
+        uses: "google-github-actions/get-secretmanager-secrets@v1"
+        with:
+          secrets: |-
+            gcp_project_id:apolo11-dev/GCP_PROJECT_ID
+            common_env:apolo11-dev/COMMON_ENV_FILE
+            common_secret_env:apolo11-dev/COMMON_SECRET_ENV_FILE
+            dev_env:apolo11-dev/DEV_ENV_FILE
+            dev_secret_env:apolo11-dev/DEV_SECRET_ENV_FILE            
+            bucket-reader-sa:apolo11-dev/BUCKET_READER_SA
+            firebase-fcm-sa:apolo11-dev/FIREBASE_FCM_SA
+
+      - name: Download build
+        uses: actions/download-artifact@v3
+        with:
+          name: deploy_dist
+          path: ./apiserver/static
+
+      - name: Set up Python 3.x
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+          architecture: "x64"
+          cache: "pip"
+
+      - name: Display Python version
+        run: python -c "import sys; print(sys.version)"
+
+      - name: Set Env Vars
+        working-directory: ./apiserver/ix/config
+        run: |
+          echo "${{ steps.secrets.outputs.common_env }}" | base64 -d > common.env
+          echo "${{ steps.secrets.outputs.common_secret_env }}" | base64 -d > common.secret.env
+          echo "${{ steps.secrets.outputs.dev_env }}" | base64 -d > dev.env
+          echo "${{ steps.secrets.outputs.dev_secret_env }}" | base64 -d > dev.secret.env
+          echo "${{ steps.secrets.outputs.bucket-reader-sa }}" | base64 -d > bucket-reader-sa.json
+          echo "${{ steps.secrets.outputs.firebase-fcm-sa }}" | base64 -d > firebase_fcm_sa.json
+
+      - name: Install dependencies
+        working-directory: ./apiserver
+        run: pip install -r requirements.txt
+
+      - name: Deploy App Engine
+        uses: "google-github-actions/deploy-appengine@v1"
+        with:
+          version: ${{ inputs.versionName }}
+          promote: false
+          working_directory: ./apiserver
+          deliverables: app.apolo11-dev.yaml
+          project_id: ${{ steps.secrets.outputs.gcp_project_id }}
