@@ -37,9 +37,6 @@ class LocalConfig(object):
     ):
         config = {
             **dotenv_values("app/config/common.env"),
-            **dotenv_values("app/config/common.secret.env"),
-            **dotenv_values("app/config/prod.env"),
-            **dotenv_values("app/config/prod.secret.env"),
         }
         IS_PROD_ENV = True
 
@@ -50,9 +47,6 @@ class LocalConfig(object):
     else:  # current_branch == "development"
         config = {
             **dotenv_values("app/config/common.env"),
-            **dotenv_values("app/config/common.secret.env"),
-            **dotenv_values("app/config/dev.env"),
-            **dotenv_values("app/config/dev.secret.env"),
         }
         IS_PROD_ENV = False
 
@@ -70,7 +64,7 @@ class LocalConfig(object):
     SQL_PASSWORD=config["SQL_PASSWORD"]
     SQL_SERVER=config["SQL_SERVER"]
     SQL_DATABASE=config["SQL_DATABASE"]
-    SQLALCHEMY_DATABASE_URI = f'mysql+mysqlconnector://{SQL_USERNAME}:{SQL_PASSWORD}@{SQL_SERVER}/{SQL_DATABASE}?charset=utf8mb4'
+    SQLALCHEMY_DATABASE_URI = f'mysql+mysqlconnector://{SQL_USERNAME}:{SQL_PASSWORD}@{SQL_SERVER}/{SQL_DATABASE}?unix_socket=/cloudsql/apolo11-dev:us-central1:apolo11-developer-db&charset=utf8'
 
     #########################
     # web service log
