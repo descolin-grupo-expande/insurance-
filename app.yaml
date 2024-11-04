@@ -2,6 +2,14 @@
 runtime: python311 # or another supported version
 
 instance_class: F2
+service: insurance-portal-backend
+
+handlers:
+- url: /.*
+  script: auto
+  http_headers:
+    Access-Control-Allow-Origin: "https://session-dot-frontend-dot-insurance-portal-dev.uc.r.appspot.com"
+
 
 entrypoint: gunicorn -b :8081 -w 2 -t 90 --worker-class=gevent --worker-connections=1000 --max-requests=500 --max-requests-jitter=50 main:app
 
