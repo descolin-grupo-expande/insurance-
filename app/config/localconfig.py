@@ -66,7 +66,7 @@ class LocalConfig(object):
     SQL_DATABASE=config["SQL_DATABASE"]
     SQL_DRIVER =config["SQL_DRIVER"]
     CLOUD_SQL_INSTANCE_ID = config["CLOUD_SQL_INSTANCE_ID"]
-    SQLALCHEMY_DATABASE_URI = f'{SQL_DRIVER}://{SQL_USERNAME}:{SQL_PASSWORD}@{SQL_SERVER}/{SQL_DATABASE}?unix_socket=/cloudsql/{CLOUD_SQL_INSTANCE_ID}&charset=utf8'
+    SQLALCHEMY_DATABASE_URI = f'{SQL_DRIVER}://{SQL_USERNAME}:{SQL_PASSWORD}@/{SQL_DATABASE}?unix_socket=/cloudsql/{CLOUD_SQL_INSTANCE_ID}&charset=utf8'
 
     #########################
     # web service log
