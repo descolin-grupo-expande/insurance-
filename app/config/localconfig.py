@@ -64,7 +64,9 @@ class LocalConfig(object):
     SQL_PASSWORD=config["SQL_PASSWORD"]
     SQL_SERVER=config["SQL_SERVER"]
     SQL_DATABASE=config["SQL_DATABASE"]
-    SQLALCHEMY_DATABASE_URI = f'mysql+mysqlconnector://{SQL_USERNAME}:{SQL_PASSWORD}@{SQL_SERVER}/{SQL_DATABASE}?unix_socket=/cloudsql/apolo11-dev:us-central1:apolo11-developer-db&charset=utf8'
+    SQL_DRIVER =config["SQL_DRIVER`"]
+    CLOUD_SQL_INSTANCE_ID = config["CLOUD_SQL_INSTANCE_ID"]
+    SQLALCHEMY_DATABASE_URI = f'{SQL_DRIVER}://{SQL_USERNAME}:{SQL_PASSWORD}@{SQL_SERVER}/{SQL_DATABASE}?unix_socket=/cloudsql/{CLOUD_SQL_INSTANCE_ID}&charset=utf8'
 
     #########################
     # web service log
