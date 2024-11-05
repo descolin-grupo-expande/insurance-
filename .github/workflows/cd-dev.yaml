@@ -40,9 +40,6 @@ jobs:
           architecture: "x64"
           cache: "pip"
 
-      - name: Display Python version
-        run: python -c "import sys; print(sys.version)"
-
       - name: Set Env Vars
         working-directory: ./app/config
         run: |

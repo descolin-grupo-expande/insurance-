@@ -67,6 +67,8 @@ class LocalConfig(object):
     SQL_DRIVER =config["SQL_DRIVER"]
     CLOUD_SQL_INSTANCE_ID = config["CLOUD_SQL_INSTANCE_ID"]
     SQLALCHEMY_DATABASE_URI = f'{SQL_DRIVER}://{SQL_USERNAME}:{SQL_PASSWORD}@/{SQL_DATABASE}?unix_socket=/cloudsql/{CLOUD_SQL_INSTANCE_ID}&charset=utf8'
+    SECRET_KEY = config["SECRET_KEY"]
+    JWT_ALGORITHM = config["JWT_ALGORITHM"]
 
     #########################
     # web service log
