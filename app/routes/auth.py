@@ -95,6 +95,9 @@ def authenticate_user():
         redirect_url = "https://session-dot-frontend-dot-insurance-portal-dev.uc.r.appspot.com/"
         response.headers["Location"] = redirect_url
         response.headers["Cache-Control"] = "private"
+        response.headers["Access-Control-Allow-Origin"] = request.headers.get('Origin')
+        response.headers["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS"
+        response.headers["Access-Control-Allow-Headers"] = "Content-Type"
         response.status_code = 200
         return response
 
