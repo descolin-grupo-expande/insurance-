@@ -101,7 +101,7 @@ def authenticate_user():
 
         # Redirect back to Company B’s mobile app without the session token in the URL
         redirect_url = "https://session-dot-frontend-dot-insurance-portal-dev.uc.r.appspot.com/"
-        response.headers["Location"] = redirect_url
+        response.headers["LocationX"] = redirect_url
         response.headers["Cache-Control"] = "private"
         response.headers["Access-Control-Allow-Origin"] = "*"
         response.headers["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS"
