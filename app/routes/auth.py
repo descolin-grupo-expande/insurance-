@@ -56,8 +56,14 @@ def token_required(f):
         return f(*args, **kwargs)
     return decorated
 
-@auth_bp.route('/', methods=['POST'])
+@auth_bp.route('/', methods=['GET', 'POST', 'OPTIONS'])
 def authenticate_user():
+    if request.method == 'OPTIONS':
+        response = jsonify({'status': 'OK'})
+        response.headers["Access-Control-Allow-Origin"] = "*"
+        response.headers["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS"
+        response.headers["Access-Control-Allow-Headers"] = "Content-Type"
+        return response
     # Company B sends a one-time token and user details in the POST request
     one_time_token = request.json.get("one_time_token")
     email = request.json.get("email")
