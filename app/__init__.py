@@ -12,32 +12,33 @@ def create_app():
     app = Flask(__name__)
     
     CORS(app, resources={
-    r"*": {
-        "origins": [
-            r".*tec-seguros.*",
-            r".*teledoctor.*",
-            r"http://localhost.*",
-            r"https://localhost.*",
-            # Teledoctor
-            r".*35.196.207.125.*",
-            r".*tdasistencia.*",
-            # Broker
-            r".*35.196.248.242.*",
-            # Policy Integrator
-            r".*policy-integrator.*",
-            r".*dev.s2plus.online.*",
-            #Projections
-            r".*financial-projections.*",
-            r".*credix.asiasistencias.*",
-            r".*unillantas.asiasistencias.*",
-            #Other
-            r".*sigep.gt-complementa.*",
-            r".*customer-mailing.*",
-            r"capacitor://localhost.*",
-            r".*appspot.*",
-            r".*grupoasys.*",
-        ]
+        r"*": {
+            "origins": [
+                r".*tec-seguros.*",
+                r".*teledoctor.*",
+                r"http://localhost.*",
+                r"https://localhost.*",
+                # Teledoctor
+                r".*35.196.207.125.*",
+                r".*tdasistencia.*",
+                # Broker
+                r".*35.196.248.242.*",
+                # Policy Integrator
+                r".*policy-integrator.*",
+                r".*dev.s2plus.online.*",
+                #Projections
+                r".*financial-projections.*",
+                r".*credix.asiasistencias.*",
+                r".*unillantas.asiasistencias.*",
+                #Other
+                r".*sigep.gt-complementa.*",
+                r".*customer-mailing.*",
+                r"capacitor://localhost.*",
+                r".*grupoasys.*",
+            ]
+        }
     })
+
     #CORS(app)
     #CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True, methods=["GET", "POST", "OPTIONS"])
     config = AppConfig()
