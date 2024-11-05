@@ -5,9 +5,11 @@ from app.extensions import db
 from app.routes.users import user_bp
 from app.routes.assistances import assistances_bp
 from app.routes.cars import cars_bp
+from flask_cors import CORS
 
 def create_app():
     app = Flask(__name__)
+    CORS(app)
     config = AppConfig()
     app.config.from_object(config)
     
