@@ -7,6 +7,7 @@ service: insurance-portal-backend
 handlers:
 - url: /.*
   script: auto
+  secure: always
   http_headers:
     Access-Control-Allow-Origin: "https://session-dot-frontend-dot-insurance-portal-dev.uc.r.appspot.com, http://localhost:4200"
 
