@@ -95,7 +95,7 @@ def authenticate_user():
         redirect_url = "https://session-dot-frontend-dot-insurance-portal-dev.uc.r.appspot.com/"
         response.headers["Location"] = redirect_url
         response.headers["Cache-Control"] = "private"
-        response.status_code = 307
+        response.status_code = 200
         return response
 
     except ExpiredSignatureError:
