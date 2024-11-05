@@ -85,7 +85,7 @@ def authenticate_user():
         response.set_cookie(
             "session_token",
             session_token,
-            #httponly=True,
+            httponly=True,
             secure=True,  # Ensure this is True in production (requires HTTPS)
             samesite="Strict",
             max_age=3600  # 1 hour in seconds
