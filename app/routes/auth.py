@@ -58,9 +58,11 @@ def token_required(f):
 
 @auth_bp.route('/', methods=['GET', 'POST', 'OPTIONS'])
 def authenticate_user():
+    print('resquest headers')
+    print(request.headers)
     if request.method == 'OPTIONS':
         response = jsonify({'status': 'OK'})
-        response.headers["Access-Control-Allow-Origin"] = "*"
+        response.headers["Access-Control-Allow-Origin"] = request.headers.get('Origin')
         response.headers["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS"
         response.headers["Access-Control-Allow-Headers"] = "Content-Type"
         return response
